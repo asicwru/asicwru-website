@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASICWRU — CWRU CHIPS</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><rect width='36' height='36' rx='6' fill='%23131312'/><rect x='2' y='2' width='32' height='32' rx='4' fill='none' stroke='%231d9e75' stroke-width='1.5'/><rect x='8' y='8' width='20' height='20' rx='2' fill='none' stroke='%231d9e75' stroke-width='1'/><line x1='2' y1='12' x2='8' y2='12' stroke='%231d9e75' stroke-width='1.5'/><line x1='2' y1='18' x2='8' y2='18' stroke='%231d9e75' stroke-width='1.5'/><line x1='2' y1='24' x2='8' y2='24' stroke='%231d9e75' stroke-width='1.5'/><line x1='28' y1='12' x2='34' y2='12' stroke='%231d9e75' stroke-width='1.5'/><line x1='28' y1='18' x2='34' y2='18' stroke='%231d9e75' stroke-width='1.5'/><line x1='28' y1='24' x2='34' y2='24' stroke='%231d9e75' stroke-width='1.5'/><line x1='12' y1='2' x2='12' y2='8' stroke='%231d9e75' stroke-width='1.5'/><line x1='18' y1='2' x2='18' y2='8' stroke='%231d9e75' stroke-width='1.5'/><line x1='24' y1='2' x2='24' y2='8' stroke='%231d9e75' stroke-width='1.5'/><line x1='12' y1='28' x2='12' y2='34' stroke='%231d9e75' stroke-width='1.5'/><line x1='18' y1='28' x2='18' y2='34' stroke='%231d9e75' stroke-width='1.5'/><line x1='24' y1='28' x2='24' y2='34' stroke='%231d9e75' stroke-width='1.5'/><rect x='13' y='13' width='10' height='10' rx='1' fill='%231d9e75' opacity='0.3'/><rect x='15' y='15' width='6' height='6' rx='1' fill='%231d9e75'/></svg>">
+<style>
+  :root[data-theme="light"] {
+    --bg-page: #f5f4f0;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f0efe9;
+    --text-primary: #1a1a18;
+    --text-secondary: #5f5e5a;
+    --border-subtle: rgba(0,0,0,0.08);
+    --border-medium: rgba(0,0,0,0.15);
+    --border-strong: rgba(0,0,0,0.25);
+    --accent: #0f6e56;
+    --accent-mid: #1d9e75;
+    --accent-light: #e1f5ee;
+    --accent-text: #085041;
+    --grid-line: rgba(0,0,0,0.06);
+    --toggle-bg: #e0dfd9;
+    --nav-bg: rgba(245,244,240,0.92);
+  }
+  :root[data-theme="dark"] {
+    --bg-page: #131312;
+    --bg-primary: #1c1c1a;
+    --bg-secondary: #222220;
+    --text-primary: #e8e7e2;
+    --text-secondary: #888780;
+    --border-subtle: rgba(255,255,255,0.07);
+    --border-medium: rgba(255,255,255,0.13);
+    --border-strong: rgba(255,255,255,0.22);
+    --accent: #1d9e75;
+    --accent-mid: #1d9e75;
+    --accent-light: #04342c;
+    --accent-text: #9fe1cb;
+    --grid-line: rgba(255,255,255,0.04);
+    --toggle-bg: #2c2c2a;
+    --nav-bg: rgba(19,19,18,0.92);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  /* ── STICKY NAV ── */
+  .navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border-subtle);
+    transition: background 0.2s;
+  }
+
+  .navbar-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .logo-lockup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .logo-wordmark {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .logo-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text-secondary);
+    letter-spacing: 0.04em;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .nav-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.04em;
+    transition: color 0.15s, background 0.15s;
+    white-space: nowrap;
+  }
+
+  .nav-link:hover { color: var(--text-primary); background: var(--border-subtle); }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--toggle-bg);
+    border: none;
+    border-radius: 20px;
+    padding: 5px 12px;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .theme-toggle:hover { background: var(--border-medium); }
+  .toggle-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent-mid); flex-shrink: 0; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 560px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-top: 56px;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('images/hero_image.png');
+    background-size: cover;
+    background-position: center;
+    background-color: #0a0a12;
+    transform: scale(1.05);
+    transition: transform 0.1s linear;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(10,10,18,0.65) 0%,
+      rgba(10,10,18,0.55) 40%,
+      rgba(10,10,18,0.85) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 0 1.5rem;
+    max-width: 700px;
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    padding: 5px 12px;
+    border: 1px solid rgba(29,158,117,0.5);
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 1.25rem;
+    color: #9fe1cb;
+    background: rgba(29,158,117,0.1);
+  }
+
+  .hero h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+  }
+
+  .hero h1 .accent { color: #1d9e75; }
+
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-stat {
+    background: rgba(255,255,255,0.08);
+    border: 0.5px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    backdrop-filter: blur(8px);
+  }
+
+  .hero-stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1d9e75;
+  }
+
+  .hero-stat-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 1px;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.4);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  .hero-scroll-arrow {
+    width: 1px;
+    height: 32px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal.hidden {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  /* ── MAIN CONTENT ── */
+  .site { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+
+  .section { margin-bottom: 2.5rem; }
+
+  .section-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); }
+
+  /* ── FILMSTRIP ── */
+  .filmstrip {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-medium) transparent;
+  }
+
+  .filmstrip::-webkit-scrollbar { height: 4px; }
+  .filmstrip::-webkit-scrollbar-track { background: transparent; }
+  .filmstrip::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 2px; }
+
+  .film-card {
+    flex: 0 0 260px;
+    border: 0.5px solid var(--border-subtle);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--bg-primary);
+    transition: border-color 0.15s;
+  }
+
+  .film-card:hover { border-color: var(--border-strong); }
+
+  .film-img { width: 100%; height: 160px; object-fit: cover; display: block; background: var(--bg-secondary); }
+
+  .film-img-placeholder {
+    width: 100%;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    border-bottom: 0.5px solid var(--border-subtle);
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .film-caption { padding: 10px 14px; }
+  .film-caption-title { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-primary); font-weight: 700; }
+  .film-caption-sub { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+  /* ── FLOW STEPS ── */
+  .flow-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+
+  .flow-step {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 0.875rem 1rem;
+    transition: border-color 0.15s;
+  }
+
+  .flow-step:hover { border-color: var(--accent-mid); }
+
+  .step-num { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent-mid); margin-bottom: 4px; font-weight: 700; }
+  .step-name { font-size: 13px; font-weight: 500; line-height: 1.3; color: var(--text-primary); }
+  .step-desc { font-size: 12px; color: var(--text-secondary); margin-top: 4px; line-height: 1.4; }
+
+  /* ── PREREQ / TAPEOUT LIST ── */
+  .prereq-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .prereq-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 0.875rem 1rem;
+  }
+
+  .prereq-icon { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent-mid); font-weight: 700; min-width: 32px; margin-top: 2px; }
+  .prereq-text { font-size: 14px; line-height: 1.5; color: var(--text-primary); }
+  .prereq-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; line-height: 1.5; }
+
+  /* ── TIMELINE ── */
+  .timeline { border-left: 2px solid var(--border-medium); padding-left: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
+  .tl-item { position: relative; }
+  .tl-dot { position: absolute; left: -1.625rem; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-mid); border: 2px solid var(--bg-page); }
+  .tl-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; color: var(--text-primary); }
+  .tl-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+    background: var(--accent-light);
+    color: var(--accent-text);
+    vertical-align: middle;
+  }
+
+  /* ── HANDBOOK ── */
+  .handbook-hero {
+    background: var(--bg-primary);
+    border: 1px solid var(--accent-mid);
+    border-radius: 14px;
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .handbook-icon { font-family: 'Space Mono', monospace; font-size: 24px; font-weight: 700; color: var(--accent-mid); min-width: 40px; line-height: 1; margin-top: 3px; }
+  .handbook-title { font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; letter-spacing: -0.01em; }
+  .handbook-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px; max-width: 560px; }
+  .topic-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .topic-tag { font-family: 'Space Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 4px; background: var(--accent-light); color: var(--accent-text); border: 0.5px solid var(--accent); }
+  .handbook-link { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent-mid); text-decoration: none; display: inline-block; }
+  .divider-note { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-secondary); margin-bottom: 1rem; letter-spacing: 0.03em; }
+
+  /* ── RESOURCES ── */
+  .resource-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+
+  .resource-card {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: border-color 0.15s;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+  }
+
+  .resource-card:hover { border-color: var(--border-strong); }
+  .resource-card.featured { border: 1px solid var(--accent-mid); }
+  .resource-type { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 6px; }
+  .resource-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; line-height: 1.3; color: var(--text-primary); }
+  .resource-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+  .resource-link { display: inline-block; margin-top: 10px; font-size: 12px; font-family: 'Space Mono', monospace; color: var(--accent-mid); text-decoration: none; }
+
+  /* ── PROJECTS ── */
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+
+  .project-card { background: var(--bg-primary); border: 0.5px solid var(--border-subtle); border-radius: 10px; padding: 1rem 1.1rem; transition: border-color 0.15s; }
+  .project-card:hover { border-color: var(--border-medium); }
+  .project-diff { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .project-diff.easy { color: #1d9e75; }
+  .project-diff.medium { color: #ef9f27; }
+  .project-diff.hard { color: #d85a30; }
+  .project-name { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; line-height: 1.3; }
+  .project-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+  .project-skills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+  .skill-tag { font-family: 'Space Mono', monospace; font-size: 9px; padding: 2px 6px; border-radius: 3px; background: var(--bg-secondary); color: var(--text-secondary); border: 0.5px solid var(--border-subtle); }
+
+  /* ── ALUMNI ── */
+  .alumni-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+
+  .alumni-card {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: border-color 0.15s;
+  }
+
+  .alumni-card:hover { border-color: var(--border-medium); }
+
+  .alumni-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    border: 1px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent-text);
+    flex-shrink: 0;
+  }
+
+  .alumni-name { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
+  .alumni-role { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--accent-mid); margin-bottom: 6px; letter-spacing: 0.04em; }
+  .alumni-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+  .alumni-links { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .alumni-link { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--accent-mid); text-decoration: none; }
+
+  /* ── GET INVOLVED ── */
+  .involve-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+
+  .involve-card {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: border-color 0.15s;
+  }
+
+  .involve-card:hover { border-color: var(--accent-mid); }
+  .involve-card.primary { border: 1px solid var(--accent-mid); }
+  .involve-icon { font-family: 'Space Mono', monospace; font-size: 20px; margin-bottom: 10px; color: var(--accent-mid); }
+  .involve-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; color: var(--text-primary); }
+  .involve-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+  .involve-link { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent-mid); margin-top: 10px; display: inline-block; word-break: break-all; }
+
+  /* ── FOOTER ── */
+  .footer-note {
+    border-top: 0.5px solid var(--border-subtle);
+    padding-top: 1.5rem;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-family: 'Space Mono', monospace;
+    line-height: 1.8;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .logo-sub { display: none; }
+    .hero h1 { font-size: 26px; }
+    .hero-stats { gap: 8px; }
+    .handbook-hero { flex-direction: column; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- STICKY NAV -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="logo-lockup" href="#">
+      <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+        <rect width="36" height="36" rx="6" fill="#131312"/>
+        <rect x="2" y="2" width="32" height="32" rx="4" stroke="#1d9e75" stroke-width="1.5"/>
+        <rect x="8" y="8" width="20" height="20" rx="2" stroke="#1d9e75" stroke-width="1"/>
+        <line x1="2" y1="12" x2="8" y2="12" stroke="#1d9e75" stroke-width="1.5"/>
+        <line x1="2" y1="18" x2="8" y2="18" stroke="#1d9e75" stroke-width="1.5"/>
+        <line x1="2" y1="24" x2="8" y2="24" stroke="#1d9e75" stroke-width="1.5"/>
+        <line x1="28" y1="12" x2="34" y2="12" stroke="#1d9e75" stroke-width="1.5"/>
+        <line x1="28" y1="18" x2="34" y2="18" stroke="#1d9e75" stroke-width="1.5"/>
+        <line x1="28" y1="24" x2="34" y2="24" stroke="#1d9e75" stroke-width="1.5"/>
+        <line x1="12" y1="2" x2="12" y2="8" stroke="#1d9e75" stroke-width="1.5"/>
+        <line x1="18" y1="2" x2="18" y2="8" stroke="#1d9e75" stroke-width="1.5"/>
+        <line x1="24" y1="2" x2="24" y2="8" stroke="#1d9e75" stroke-width="1.5"/>
+        <line x1="12" y1="28" x2="12" y2="34" stroke="#1d9e75" stroke-width="1.5"/>
+        <line x1="18" y1="28" x2="18" y2="34" stroke="#1d9e75" stroke-width="1.5"/>
+        <line x1="24" y1="28" x2="24" y2="34" stroke="#1d9e75" stroke-width="1.5"/>
+        <rect x="13" y="13" width="10" height="10" rx="1" fill="#1d9e75" opacity="0.3"/>
+        <rect x="15" y="15" width="6" height="6" rx="1" fill="#1d9e75"/>
+      </svg>
+      <div>
+        <div class="logo-wordmark">ASICWRU</div>
+        <div class="logo-sub">CWRU CHIPS — ASIC Design</div>
+      </div>
+    </a>
+    <nav class="nav-links">
+      <a class="nav-link" href="#about">About</a>
+      <a class="nav-link" href="#gallery">Gallery</a>
+      <a class="nav-link" href="#learn">Learn</a>
+      <a class="nav-link" href="#tapeouts">Tapeouts</a>
+      <a class="nav-link" href="#alumni">Alumni</a>
+      <a class="nav-link" href="#involved">Get Involved</a>
+    </nav>
+    <div class="nav-right">
+      <button class="theme-toggle" onclick="toggleTheme()">
+        <div class="toggle-dot"></div>
+        <span id="toggle-label">dark mode</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg" id="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-tag">CWRU CHIPS — ASIC Design</div>
+    <h1>Design real <span class="accent">silicon</span><br>as an undergrad.</h1>
+    <p class="hero-sub">We take digital designs from RTL all the way to a physical chip using open-source EDA tools and Tiny Tapeout. Our first tapeout was a single-cycle RISC-V processor — yours could be anything.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">1</div>
+        <div class="hero-stat-label">tapeout</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">IHP 130nm</div>
+        <div class="hero-stat-label">process node</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">1866</div>
+        <div class="hero-stat-label">standard cells</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">RTL → GDS</div>
+        <div class="hero-stat-label">open-source flow</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>scroll</span>
+    <div class="hero-scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<div class="site">
+
+  <div class="section reveal" id="about">
+    <div class="section-title">What we do</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">01</div>
+        <div class="step-name">Learn digital design</div>
+        <div class="step-desc">CMOS gates, flip flops, FSMs, and basic Verilog</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">02</div>
+        <div class="step-name">Write RTL</div>
+        <div class="step-desc">Design your circuit in SystemVerilog, module by module</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">03</div>
+        <div class="step-name">Verify</div>
+        <div class="step-desc">Write cocotb testbenches, simulate with Icarus Verilog</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">04</div>
+        <div class="step-name">Synthesize</div>
+        <div class="step-desc">Yosys maps RTL to IHP standard cells</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">05</div>
+        <div class="step-name">Place & route</div>
+        <div class="step-desc">OpenROAD places cells and routes metal layers</div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">06</div>
+        <div class="step-name">Tape out</div>
+        <div class="step-desc">Submit GDS to Tiny Tapeout for fabrication</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section reveal" id="gallery">
+    <div class="section-title">Gallery</div>
+    <div class="filmstrip">
+      <div class="film-card">
+        <img class="film-img" src="images/gds_layout.png" alt="GDS layout"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="film-img-placeholder" style="display:none;">
+          <span>&#9632;</span><span>gds_layout.png</span>
+        </div>
+        <div class="film-caption">
+          <div class="film-caption-title">GDS layout</div>
+          <div class="film-caption-sub">tt_um_cwru_cpu · IHP 130nm · 1866 cells</div>
+        </div>
+      </div>
+      <div class="film-card">
+        <img class="film-img" src="images/gds_render.png" alt="GDS render"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="film-img-placeholder" style="display:none;">
+          <span>&#9632;</span><span>gds_render.png</span>
+        </div>
+        <div class="film-caption">
+          <div class="film-caption-title">GDS render</div>
+          <div class="film-caption-sub">3D view · Tiny Tapeout viewer</div>
+        </div>
+      </div>
+      <div class="film-card">
+        <img class="film-img" src="images/fpga_demo.png" alt="FPGA demo"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="film-img-placeholder" style="display:none;">
+          <span>&#9632;</span><span>fpga_demo.jpg</span>
+        </div>
+        <div class="film-caption">
+          <div class="film-caption-title">FPGA demo</div>
+          <div class="film-caption-sub">Basys3 · fibonacci sequence · 7-seg display</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section reveal" id="prereqs">
+    <div class="section-title">Prerequisites</div>
+    <div class="prereq-list">
+      <div class="prereq-item">
+        <div class="prereq-icon">[1]</div>
+        <div>
+          <div class="prereq-text">Basic programming experience</div>
+          <div class="prereq-sub">Any language is fine — Python, C, Java. You just need to be comfortable reading and writing code.</div>
+        </div>
+      </div>
+      <div class="prereq-item">
+        <div class="prereq-icon">[2]</div>
+        <div>
+          <div class="prereq-text">Digital logic fundamentals (learnable here)</div>
+          <div class="prereq-sub">AND/OR/NOT gates, flip flops, combinational vs sequential logic. Resources below will get you there.</div>
+        </div>
+      </div>
+      <div class="prereq-item">
+        <div class="prereq-icon">[3]</div>
+        <div>
+          <div class="prereq-text">Curiosity about how hardware actually works</div>
+          <div class="prereq-sub">The best motivation is genuinely wanting to understand what's happening inside a chip.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <div class="section-title">Learning path</div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Digital logic basics <span class="badge">week 1–2</span></div>
+        <div class="tl-desc">Boolean algebra, logic gates, truth tables, timing diagrams. HDLBits exercises 1–20 are a great starting point.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Verilog / SystemVerilog <span class="badge">week 2–4</span></div>
+        <div class="tl-desc">Modules, wire vs reg, always blocks, combinational vs clocked logic. Complete HDLBits through the sequential circuits section.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Computer architecture <span class="badge">week 3–5</span></div>
+        <div class="tl-desc">Instruction sets, datapaths, ALUs, register files. Patterson & Hennessy Ch. 1–4 or Nand2Tetris Part II both work well.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-title">RISC-V ISA (optional but useful) <span class="badge">week 4–6</span></div>
+        <div class="tl-desc">R/I/S/B/U/J instruction formats and encoding. Useful if you want to implement a processor, but not required for all ASIC designs.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Tiny Tapeout + OpenLane flow <span class="badge">week 6–8</span></div>
+        <div class="tl-desc">Set up the TT template, wire up your design, run the GDS CI pipeline, and submit. The TT docs are excellent.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section reveal" id="learn">
+    <div class="section-title">ASICWRU handbook</div>
+    <div class="handbook-hero">
+      <div class="handbook-icon">[H]</div>
+      <div>
+        <div class="handbook-title">The ASICWRU Handbook</div>
+        <div class="handbook-desc">A comprehensive, personally written reference covering everything you need to go from zero to tapeout. Every article is written by club members who've been through the flow — not copy-pasted from a textbook.</div>
+        <div class="topic-tags">
+          <span class="topic-tag">Digital Logic</span>
+          <span class="topic-tag">Verilog / SV</span>
+          <span class="topic-tag">Computer Architecture</span>
+          <span class="topic-tag">Timing Constraints</span>
+          <span class="topic-tag">Clock Domain Crossing</span>
+          <span class="topic-tag">Cocotb Verification</span>
+          <span class="topic-tag">RTL-to-GDS Flow</span>
+          <span class="topic-tag">STA & Power</span>
+        </div>
+        <a class="handbook-link" href="https://github.com/AxC1271/ASICWRU-Handbook" target="_blank">github.com/AxC1271/ASICWRU-Handbook →</a>
+      </div>
+    </div>
+    <p class="divider-note">external resources worth knowing alongside the handbook</p>
+    <div class="resource-grid">
+      <div class="resource-card featured">
+        <div class="resource-type">interactive exercises</div>
+        <div class="resource-title">HDLBits</div>
+        <div class="resource-desc">200+ browser-based Verilog exercises from basic gates to pipelined CPUs. Best hands-on complement to the handbook.</div>
+        <a class="resource-link" href="https://hdlbits.01xz.net/wiki/Main_Page" target="_blank">hdlbits.01xz.net →</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-type">tapeout platform</div>
+        <div class="resource-title">Tiny Tapeout</div>
+        <div class="resource-desc">The platform we use to submit designs to silicon. Excellent documentation, starter templates, and an active Discord community.</div>
+        <a class="resource-link" href="https://tinytapeout.com" target="_blank">tinytapeout.com →</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-type">course</div>
+        <div class="resource-title">Nand2Tetris</div>
+        <div class="resource-desc">Build a computer from NAND gates up. Great companion to the computer architecture section of the handbook.</div>
+        <a class="resource-link" href="https://www.nand2tetris.org" target="_blank">nand2tetris.org →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <div class="section-title">Project ideas for next tapeout</div>
+    <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:1rem;">A CPU is the classic first project — but it doesn't have to be yours. Here are some ideas spanning different difficulty levels and interests.</p>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-diff easy">beginner</div>
+        <div class="project-name">UART controller</div>
+        <div class="project-desc">Implement TX/RX serial communication. Very concrete, great first project — you can test it talking to your laptop.</div>
+        <div class="project-skills"><span class="skill-tag">FSM</span><span class="skill-tag">serial</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-diff easy">beginner</div>
+        <div class="project-name">PWM generator</div>
+        <div class="project-desc">Configurable pulse-width modulator with duty cycle control. Hook it up to an LED or servo for a satisfying demo.</div>
+        <div class="project-skills"><span class="skill-tag">counter</span><span class="skill-tag">comparator</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-diff easy">beginner</div>
+        <div class="project-name">LFSR random number generator</div>
+        <div class="project-desc">Hardware pseudorandom number generator using a linear feedback shift register. Surprisingly fun to characterize.</div>
+        <div class="project-skills"><span class="skill-tag">shift reg</span><span class="skill-tag">XOR</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-diff medium">intermediate</div>
+        <div class="project-name">Custom ISA processor</div>
+        <div class="project-desc">Design your own instruction set from scratch. Fewer constraints than RISC-V — great for exploring ISA design tradeoffs.</div>
+        <div class="project-skills"><span class="skill-tag">datapath</span><span class="skill-tag">control</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-diff medium">intermediate</div>
+        <div class="project-name">FIR filter</div>
+        <div class="project-desc">Fixed-point digital signal processing. Useful for audio and sensor fusion, and great for learning pipelined multipliers.</div>
+        <div class="project-skills"><span class="skill-tag">DSP</span><span class="skill-tag">fixed-point</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-diff medium">intermediate</div>
+        <div class="project-name">VGA signal generator</div>
+        <div class="project-desc">Drive a monitor directly from your chip — pixel timing, sync pulses, and a framebuffer. Extremely satisfying when it works.</div>
+        <div class="project-skills"><span class="skill-tag">timing</span><span class="skill-tag">memory</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-diff hard">advanced</div>
+        <div class="project-name">AES encryption block</div>
+        <div class="project-desc">Hardware implementation of AES-128. A great introduction to cryptographic hardware and side-channel considerations.</div>
+        <div class="project-skills"><span class="skill-tag">crypto</span><span class="skill-tag">S-box</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-diff hard">advanced</div>
+        <div class="project-name">Dot product engine</div>
+        <div class="project-desc">A systolic array for matrix multiply — the core of every neural network accelerator. Build the thing that runs AI.</div>
+        <div class="project-skills"><span class="skill-tag">systolic</span><span class="skill-tag">MAC</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-diff hard">advanced</div>
+        <div class="project-name">Pipelined RISC-V</div>
+        <div class="project-desc">Extend the club's single-cycle RV32I to a 5-stage pipeline with hazard detection and forwarding. A natural next step.</div>
+        <div class="project-skills"><span class="skill-tag">pipeline</span><span class="skill-tag">hazards</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section reveal" id="tapeouts">
+    <div class="section-title">Our first tapeout — RV32I CPU</div>
+    <div class="prereq-list">
+      <div class="prereq-item">
+        <div class="prereq-icon">RTL</div>
+        <div>
+          <div class="prereq-text">Single-cycle RV32I processor in SystemVerilog</div>
+          <div class="prereq-sub">Full ALU, 32-register file, immediate generator, control unit, branch/jump logic. Verified with cocotb running fibonacci.</div>
+        </div>
+      </div>
+      <div class="prereq-item">
+        <div class="prereq-icon">GDS</div>
+        <div>
+          <div class="prereq-text">1866 standard cells — 36% tile utilization on a 2×2 tile</div>
+          <div class="prereq-sub">IHP SG13G2 130nm process. Critical path ~4.7ns. Estimated max frequency ~150MHz at typical corner.</div>
+        </div>
+      </div>
+      <div class="prereq-item">
+        <div class="prereq-icon">PWR</div>
+        <div>
+          <div class="prereq-text">2.95mW total at nominal conditions (1.2V, 25°C)</div>
+          <div class="prereq-sub">64% sequential, 21% clock tree, 15% combinational logic. Register file dominates power as expected.</div>
+        </div>
+      </div>
+      <div class="prereq-item">
+        <div class="prereq-icon">STA</div>
+        <div>
+          <div class="prereq-text">Zero setup violations across all process corners</div>
+          <div class="prereq-sub">+11.6ns worst-case setup slack at slow corner (1.08V, 125°C). Clean timing closure across all corners.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section reveal" id="alumni">
+    <div class="section-title">Alumni</div>
+    <div class="alumni-grid">
+      <div class="alumni-card">
+        <div class="alumni-avatar">AC</div>
+        <div>
+          <div class="alumni-name">Andrew Chen</div>
+          <div class="alumni-role">ASIC Design Lead</div>
+          <div class="alumni-desc">Led the club's first tapeout including a full RV32I processor on IHP 130nm. MS ECE at Carnegie Mellon (Integrated Systems), starting Aug 2026.</div>
+          <div class="alumni-links">
+            <a class="alumni-link" href="https://github.com/AxC1271" target="_blank">GitHub →</a>
+            <a class="alumni-link" href="https://linkedin.com/in/achen5291" target="_blank">LinkedIn →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section reveal" id="involved">
+    <div class="section-title">Get involved</div>
+    <div class="involve-grid">
+      <a class="involve-card primary" href="https://discord.gg/4qHSxRcE" target="_blank">
+        <div class="involve-icon">#</div>
+        <div class="involve-title">Join our Discord</div>
+        <div class="involve-desc">The best place to ask questions, get help with your design, and stay up to date on what the club is working on.</div>
+        <div class="involve-link">discord.gg/4qHSxRcE →</div>
+      </a>
+      <a class="involve-card" href="https://github.com/AxC1271/CWRU_CPU" target="_blank">
+        <div class="involve-icon">&lt;/&gt;</div>
+        <div class="involve-title">Star us on GitHub</div>
+        <div class="involve-desc">Check out the source for our first tapeout — the full RTL, testbenches, and GDS flow are all open source.</div>
+        <div class="involve-link">github.com/AxC1271/CWRU_CPU →</div>
+      </a>
+      <a class="involve-card" href="mailto:chips@case.edu" target="_blank">
+        <div class="involve-icon">@</div>
+        <div class="involve-title">Email us</div>
+        <div class="involve-desc">Interested in joining, collaborating, or just want to learn more? Reach out directly and we'll get back to you.</div>
+        <div class="involve-link">chips@case.edu →</div>
+      </a>
+      <div class="involve-card">
+        <div class="involve-icon">+</div>
+        <div class="involve-title">Show up</div>
+        <div class="involve-desc">We meet regularly during the semester. No experience required — just bring curiosity. Look for us through CWRU CHIPS.</div>
+        <div class="involve-link" style="color:var(--text-secondary);">meetings via CWRU CHIPS</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    ASICWRU · CWRU CHIPS — ASIC Design · Case Western Reserve University<br>
+    Part of the broader CWRU CHIPS initiative. Find us on Discord or reach out through CWRU CHIPS.
+  </div>
+
+</div>
+
+<script>
+  function toggleTheme() {
+    const root = document.documentElement;
+    const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    document.getElementById('toggle-label').textContent = next + ' mode';
+  }
+
+  // Parallax hero
+  const heroBg = document.getElementById('hero-bg');
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    if (heroBg && scrolled < window.innerHeight) {
+      heroBg.style.transform = `scale(1.05) translateY(${scrolled * 0.3}px)`;
+    }
+  }, { passive: true });
+
+  // Scroll reveal — pop in AND pop out
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        entry.target.classList.remove('hidden');
+      } else {
+        entry.target.classList.remove('visible');
+        entry.target.classList.add('hidden');
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
